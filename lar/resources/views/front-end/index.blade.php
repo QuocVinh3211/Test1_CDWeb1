@@ -5,10 +5,15 @@
         <div class="container">
             <section>
                 <h3>Flight Booking</h3>
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <form role="form" action="{{ route('search') }}" onsubmit="return validateForm();" >
-                        @csrf
+                      
                             <div class="row">
                                 <div class="col-sm-4">
                                     <h4 class="form-heading">1. Flight Destination</h4>
@@ -42,7 +47,7 @@
                                     <div class="form-group">
                                         <label class="control-label">Departure: </label>
                                          <?php $date_now = date('Y-m-d'); ?>
-                                        <input type="date" name="departure" id="departure" value="<?php echo $date_now ?>" class="form-control" placeholder="Choose Departure Date">
+                                        <input  type="date" name="departure" id="departure" value="<?php echo $date_now ?>" class="form-control"  class="datepicker">
                                     </div>
                                     <div class="form-group">
                                         <div class="radio">
@@ -56,7 +61,7 @@
 
                                     <div class="form-group" id="hide" style="display: none;">
                                         <label class="control-label">Return: </label>
-                                        <input type="date" name="return" id="return" class="form-control" placeholder="Choose Return Date">
+                                        <input type="date" id="return" name="return" id="return" class="form-control" placeholder="Choose Return Date">
                                     </div>
 
                                 </div>

@@ -31,10 +31,14 @@ class LoginController extends Controller
     protected $redirectTo = '/';
 
     public function showLoginForm(){
+        if(!session()->has('url.intended')) // kiểm tra thử có tk url intended chưa
+        {
+            session(['url.intended' => url()->previous()]); // lưu trang truy cập trước đó vào
+        }
         return View('front-end.login');
     }
 
-    /**
+    /**à
      * Create a new controller instance.
      *
      * @return void
@@ -45,33 +49,5 @@ class LoginController extends Controller
     }
 
     // dinh nghia lai ham login
-    protected function authenticated(Request $request, $user)
-    {
-        $date_now = date('Y-m-d h:i:s');
-        if($user->attempt > 2){ // dung nhung attempt qua 3 lan
-            if(strtotime($user->last_access) < strtotime($date_now) &&  strtotime($date_now) < (strtotime($user->last_access) + 10)){
-                $messa = "Tài khoản của bạn bị khóa trong 30 phút ";
-                echo "<script type='text/javascript'>alert('$messa');</script>";
-                Auth::logout();
-                return redirect('login');
-            }
-            else { // het thoi gian khoa
-                User::where('email' , '=', $user->email)->update(['attempt' => 0, 'last_access' => $date_now]);
-                return redirect('/');
-            }
-        }
-        else { // dung va attempt chua toi 3 lan
-                    User::where('email' , '=', $user->email)->update(['attempt' => 0, 'last_access' => $date_now]);
-                    return redirect('/');
-            }
-
-         // neu login sai
-         if(Auth::login($user, false))
-         {
-             dd("cum");
-            $attempt = $user->attempt + 1;
-            User::where('email' , '=', $user->email)->update(['attempt' => $attempt, 'last_access' => $date_now]);
-         }
-
-    }
+  
 }

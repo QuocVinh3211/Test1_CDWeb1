@@ -18,7 +18,13 @@
                         <form method="POST" action="{{ route('postlogin') }}">
                             @csrf
                                 <div class="form-group">
+
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                                <?php 
+                                      if(isset($mess)) {
+                                        echo $mess;
+                                    }
+                                 ?>
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
 
                                     @if ($errors->has('email'))

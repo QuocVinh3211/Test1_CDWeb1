@@ -4,24 +4,96 @@
     <meta charset="UTF-8">
     <title>Flights - Worldskills Travel</title>
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('public/assets/bootstrap/css/bootstrap.css')}}">
-  
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css'>
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('public/assets/style.css')}}">
 
     <style>
         .invalid-feedback {
             color: red;
         }
+
+        .btn-submit {
+            padding-left: 1150px ;
+        }
+
+        .info_card {
+            display: none;
+        }
+
+        .alert {
+            color: red;
+        }
     </style>
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
+
+function changeAirLine(){
+    
+    var from_city_id = document.getElementById("from").value;
+    var from_to_id   = document.getElementById("to").value;
+
+    alert(from_city_id);
+    $.post("getAirline", {"from_city_id":from_city_id, "from_to_id":from_to_id},
+        function (data, textStatus, jqXHR) {
+            
+        },
+        "dataType"
+    );
+}
+
+
+    // payment 
+    function displayCard() {
+    var x = document.getElementById("payment").value;
+    if(x == "credit_card") {
+        document.getElementById("info_card").style.display = "block";
+    }
+    else {
+        document.getElementById("info_card").style.display = "none";
+    }
+    }
+
+
+    function BookFunction1() {
+    
+    var checkbox =  document.getElementsByName("BlockInBound");
+    for (var i = 0; i < checkbox.length; i++){
+        if (checkbox[i].checked === true){
+            document.getElementById("btn_choose").innerHTML = "Delay";
+            document.getElementById("btn_choose").style.backgroundColor = "red";
+            document.getElementById("choose").style.backgroundColor = "red";
+        }
+    }
+
+    }
+
+
+function change() {
+    document.getElementById("firstName").value=""; 
+    document.getElementById("lastName").value=""; 
+    document.getElementById("phone").value=""; 
+    document.getElementById("email").value=""; 
+}
+
+Date.prototype.today = function () { 
+    return ((this.getDate() < 10)?"0":"") + this.getDate() +"-"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"-"+ this.getFullYear();
+}
 
 // ẩn hiện 1 thẻ html
 function myFunction() {
-    document.getElementById("hide").style.display = document.getElementById("hide").style.display = "block";
+    
+    document.getElementById("hide").style.display = "block";
+    var newDate = new Date();
+    var datetime = newDate.today();
+    //var str = datetime.toDateString("yyyy-MM-dd");
+    var str = "2019-03-06";
+
+    document.getElementById("return").value = str;
 }
 function myFunction1() {
-    document.getElementById("hide").style.display = document.getElementById("hide").style.display = "none";
+    document.getElementById("hide").style.display = "none";
+    document.getElementById("return").value = "";
 }
 
 // validate
@@ -96,6 +168,7 @@ function validateCity() {
                          <!-- Authentication Links -->
                         
                          @guest
+                        
                          <li><a href="">Welcom message</a></li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -106,6 +179,12 @@ function validateCity() {
                                 </li>
                             @endif
                         @else
+                        <li><a href="{{ route('viewBook') }}">View My book</a></li>
+                       
+                            @if(Auth::user()->level == 1) 
+                                <li><a href="{{ route('addFlight') }}">Add Flight</a></li>
+                            
+                            @endif
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     Welcome {{ Auth::user()->name }} <span class="caret"></span>
@@ -124,14 +203,18 @@ function validateCity() {
                                 </div>
                             </li>
                         @endguest
+                     
                         <li><a href="{{ url('/') }}">Flights</a></li>
+                        <li><a href="{{ route('listAirport') }}">Airports</a></li>
+                        <li><a href="{{ route('listAirline') }}">Airline</a></li>
+                      
                        <?php
                             if(Auth::check())
                             {                            
                         ?>
                             <li><a href="{{ url('getEdit') }}">Profile</a></li>
                             <?php } ?>
-                       
+                        
                     </ul>
                 </div>
             </div>
